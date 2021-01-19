@@ -5,7 +5,7 @@ canvas.height = window.innerHeight;
 
 var ctx = canvas.getContext('2d');
 var img = new Image();
-img.src = '../images/ant.gif';
+img.src = './images/ant.gif';
 
 const mouse = {
     x: undefined,
