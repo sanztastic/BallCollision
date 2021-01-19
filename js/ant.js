@@ -4,15 +4,17 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 var ctx = canvas.getContext('2d');
+var img = new Image();
+img.src = '../images/ant.gif';
 
-// const mouse = {
-//     x: undefined,
-//     y: undefined
-// }
-// window.addEventListener('mousemove', (e) => {
-//     mouse.x = e.x;
-//     mouse.y = e.y;
-// });
+const mouse = {
+    x: undefined,
+    y: undefined
+}
+window.addEventListener('mousedown', (e) => {
+    mouse.x = e.x;
+    mouse.y = e.y;
+});
 window.addEventListener('resize', () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -42,10 +44,27 @@ function Circle(x, y, radius) {
     this.color = randomColor(colorArray);
 
     this.draw = function () {
+        ctx.save();
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
-        ctx.fillStyle = this.color;
-        ctx.fill();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
+        ctx.closePath();
+        ctx.clip();
+
+        ctx.drawImage(
+            img,
+            this.x - this.radius / 1.5,
+            this.y - this.radius / 2,
+            this.radius * 1.5,
+            this.radius * 1.2
+        );
+
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
+        ctx.clip();
+        ctx.closePath();
+        ctx.restore();
+        ctx.strokeStyle = this.color;
+        ctx.stroke();
     }
     this.update = function (balls) {
         if (this.x + this.radius >= innerWidth || this.x - this.radius <= 0) {
@@ -56,11 +75,10 @@ function Circle(x, y, radius) {
         }
         this.x += this.velocity.x;
         this.y += this.velocity.y;
-        // if (mouse.x - this.x < 50 && mouse.x - this.x > -50 && mouse.y - this.y < 50 && mouse.y - this.y > -50) {
-        //     if (this.radius <= 40) {
-        //         this.radius += 1;
-        //     }
-        // } else if (this.radius > this.minRadius) {
+        if (mouse.x - this.x < this.minRadius && mouse.x - this.x > -this.minRadius && mouse.y - this.y < this.minRadius && mouse.y - this.y > -this.minRadius) {
+            this.radius = 0;
+        }
+        // else if (this.radius > this.minRadius) {
         //     this.radius -= 1;
         // }
         this.draw();
@@ -76,8 +94,8 @@ function Circle(x, y, radius) {
 let ballArr = [];
 function init() {
     ballArr = [];
-    for (let i = 0; i < 200; i++) {
-        let radius = randomIntFromRange(2, 40);
+    for (let i = 0; i < 50; i++) {
+        let radius = 30;
         let x = randomIntFromRange(radius, innerWidth - radius);
         let y = randomIntFromRange(radius, innerHeight - radius);
 
