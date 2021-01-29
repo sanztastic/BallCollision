@@ -63,8 +63,8 @@ function Circle(x, y, radius) {
         ctx.clip();
         ctx.closePath();
         ctx.restore();
-        ctx.strokeStyle = this.color;
-        ctx.stroke();
+//         ctx.strokeStyle = this.color;
+//         ctx.stroke();
     }
     this.update = function (balls) {
         if (this.x + this.radius >= innerWidth || this.x - this.radius <= 0) {
